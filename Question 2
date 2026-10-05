@@ -1,0 +1,44 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+def plot_outliers_and_distribution(df, column):
+    """
+    Plot a boxplot and scatter plot for a specified DataFrame column.
+
+    Parameters:
+        df (pd.DataFrame): Input DataFrame.
+        column (str): Name of the column to visualize.
+    """
+
+    # Check whether the column exists
+    if column not in df.columns:
+        raise ValueError(f"Column '{column}' not found in DataFrame.")
+
+    # Create figure with two plots
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Boxplot — useful for identifying potential outliers
+    sns.boxplot(y=df[column], ax=axes[0])
+    axes[0].set_title(f"Boxplot of {column}")
+    axes[0].set_ylabel(column)
+
+    # Scatter plot — shows distribution of individual observations
+    sns.scatterplot(
+        x=range(len(df)),
+        y=df[column],
+        ax=axes[1]
+    )
+    axes[1].set_title(f"Scatter Plot of {column}")
+    axes[1].set_xlabel("Observation")
+    axes[1].set_ylabel(column)
+
+    plt.tight_layout()
+    plt.show()
+
+
+# Example usage
+df = pd.read_csv("dataset.csv")
+
+plot_outliers_and_distribution(df, "Age")
