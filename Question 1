@@ -1,0 +1,42 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# 1. Load the dataset
+df = pd.read_csv("dataset.csv")
+
+# 2. Separate features (X) and target (y)
+X = df.drop(columns=["target"])
+y = df["target"]
+
+# 3. Split into 70% training and 30% testing data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.30,
+    random_state=42
+)
+
+# 4. Create the StandardScaler
+scaler = StandardScaler()
+
+# 5. Fit scaler only on training features and transform both sets
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# 6. Convert scaled arrays back to DataFrames (optional)
+X_train_scaled = pd.DataFrame(
+    X_train_scaled,
+    columns=X_train.columns,
+    index=X_train.index
+)
+
+X_test_scaled = pd.DataFrame(
+    X_test_scaled,
+    columns=X_test.columns,
+    index=X_test.index
+)
+
+print("Training features shape:", X_train_scaled.shape)
+print("Testing features shape:", X_test_scaled.shape)
+print("\nScaled training data:")
+print(X_train_scaled.head())
