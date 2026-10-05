@@ -1,0 +1,54 @@
+from sklearn.metrics import precision_score, recall_score, f1_score
+
+# Example true and predicted labels
+y_true = [0, 1, 1, 0, 1, 0, 1, 1, 0, 0]
+y_pred = [0, 1, 0, 0, 1, 1, 1, 0, 0, 0]
+
+# Target class to evaluate
+target_class = 1
+
+# Calculate metrics for the specific class
+precision = precision_score(
+    y_true, y_pred,
+    pos_label=target_class
+)
+
+recall = recall_score(
+    y_true, y_pred,
+    pos_label=target_class
+)
+
+f1 = f1_score(
+    y_true, y_pred,
+    pos_label=target_class
+)
+
+# Display results
+print(f"Precision: {precision:.4f}")
+print(f"Recall:    {recall:.4f}")
+print(f"F1-score:  {f1:.4f}")
+
+from sklearn.metrics import confusion_matrix
+
+y_true = [0, 1, 1, 0, 1, 0, 1, 1, 0, 0]
+y_pred = [0, 1, 0, 0, 1, 1, 1, 0, 0, 0]
+
+target_class = 1
+
+# Get confusion matrix
+tn, fp, fn, tp = confusion_matrix(
+    y_true, y_pred,
+    labels=[0, target_class]
+).ravel()
+
+# Calculate metrics
+precision = tp / (tp + fp) if (tp + fp) else 0
+recall = tp / (tp + fn) if (tp + fn) else 0
+f1 = (
+    2 * precision * recall / (precision + recall)
+    if (precision + recall) else 0
+)
+
+print(f"Precision: {precision:.4f}")
+print(f"Recall:    {recall:.4f}")
+print(f"F1-score:  {f1:.4f}")
