@@ -1,0 +1,47 @@
+import pandas as pd
+from sklearn.model_selection import KFold, cross_val_score
+from sklearn.linear_model import Ridge
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+
+# 1. Load the dataset
+df = pd.read_csv("dataset.csv")
+
+# 2. Separate features and continuous target
+X = df.drop(columns=["target"])
+y = df["target"]
+
+# 3. Convert categorical features if necessary
+X = pd.get_dummies(X, drop_first=True)
+
+# 4. Create Ridge regression pipeline
+# Scaling is performed separately inside each CV fold
+model = make_pipeline(
+    StandardScaler(),
+    Ridge(alpha=1.0)
+)
+
+# 5. Define 5-fold cross-validation
+kf = KFold(
+    n_splits=5,
+    shuffle=True,
+    random_state=42
+)
+
+# 6. Evaluate using R² scores
+scores = cross_val_score(
+    model,
+    X,
+    y,
+    cv=kf,
+    scoring="r2"
+)
+
+# 7. Display individual fold scores
+print("R² scores for each fold:")
+for i, score in enumerate(scores, start=1):
+    print(f"Fold {i}: {score:.4f}")
+
+# 8. Calculate mean and standard deviation
+print(f"\nMean R² Score: {scores.mean():.4f}")
+print(f"Standard Deviation: {scores.std():.4f}")
